@@ -13,7 +13,6 @@
  *
  */
 
-#include <asm/segment.h>
 #include <asm/uaccess.h>
 #include <linux/buffer_head.h>
 #include <linux/delay.h>
@@ -1334,7 +1333,7 @@ static struct file *file_open(const char *path, int flags, int rights) {
 	mm_segment_t oldfs;
 	int err = 0;
 	oldfs = get_fs();
-	set_fs(get_ds());
+	set_fs(KERNEL_DS);
 	filp = filp_open(path, flags, rights);
 	set_fs(oldfs);
 	if (IS_ERR(filp)) {
@@ -1353,7 +1352,7 @@ static int file_read(struct file *file, loff_t offset, unsigned char *buf,
 	mm_segment_t oldfs;
 	int ret;
 	oldfs = get_fs();
-	set_fs(get_ds());
+	set_fs(KERNEL_DS);
 	ret = kernel_read(file, buf, count, &offset);
 	set_fs(oldfs);
 	return ret;
